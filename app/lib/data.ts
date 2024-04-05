@@ -1,4 +1,10 @@
-import { RegisterPayload, RegisterResult, UserData } from "./definitions";
+import {
+  AuthenticateUserPayload,
+  AuthenticateUserResult,
+  CreateAccountPayload,
+  CreateAccountResult,
+  User,
+} from "./definitions";
 
 interface ApiRequestOptions {
   endPoint: string;
@@ -25,10 +31,18 @@ async function sendRequest({ endPoint, body, method }: ApiRequestOptions) {
   return response.json();
 }
 
-export async function getUser(body: UserData) {
+export async function getUser(body: User) {
   return sendRequest({ endPoint: "auth/user", body, method: "GET" });
 }
 
-export async function register(body: RegisterPayload): Promise<RegisterResult> {
+export async function createAccount(
+  body: CreateAccountPayload
+): Promise<CreateAccountResult> {
   return sendRequest({ endPoint: "auth/register", body, method: "POST" });
+}
+
+export async function authenticateUser(
+  body: AuthenticateUserPayload
+): Promise<AuthenticateUserResult> {
+  return sendRequest({ endPoint: "auth/login", body, method: "POST" });
 }

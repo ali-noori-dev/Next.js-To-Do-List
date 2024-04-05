@@ -1,14 +1,19 @@
-export interface UserData {
+export interface User {
   id: number;
   name: string;
   email: string;
 }
 
-export interface RegisterPayload {
+export interface CreateAccountPayload {
   name: string;
   email: string;
   password: string;
   password_confirmation: string;
+}
+
+export interface AuthenticateUserPayload {
+  email: string;
+  password: string;
 }
 
 export interface GeneralErrorModel {
@@ -23,7 +28,7 @@ export interface FormErrors {
   password_confirmation?: string[];
 }
 
-export type RegisterResult = UserData | GeneralErrorModel;
+export type CreateAccountResult = User | GeneralErrorModel;
 
 export interface AuthenticationResult {
   status: "success" | "error";
@@ -33,4 +38,10 @@ export interface AuthenticationResult {
 export interface IToastService {
   success(msg: string, id?: string): void;
   error(msg: string, id?: string): void;
+}
+
+export type AuthenticateUserResult = LoginSuccessResult | GeneralErrorModel;
+
+export interface LoginSuccessResult {
+  token: string;
 }
