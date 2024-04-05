@@ -5,9 +5,10 @@ export const authConfig = {
     signIn: "/login",
   },
   callbacks: {
-    authorized({ auth }) {
+    authorized({ auth, request: { nextUrl } }) {
+      const isOnSignUp = nextUrl.pathname.startsWith("/sign-up");
       const isLoggedIn = !!auth?.user;
-      if (isLoggedIn) return true;
+      if (isLoggedIn || isOnSignUp) return true;
       return false; // Redirect unauthenticated users to login page
     },
   },

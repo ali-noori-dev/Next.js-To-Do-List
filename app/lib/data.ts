@@ -1,4 +1,4 @@
-import { GeneralResultModel, GetUserDataPayload } from "./definitions";
+import { RegisterPayload, RegisterResult, UserData } from "./definitions";
 
 const baseURL = process.env.API_BASE_URL;
 
@@ -15,7 +15,10 @@ async function postApi(endPoint: string, body: any) {
     });
 
     if (response.ok) {
-      return response.json() as Promise<GeneralResultModel>;
+      console.log({ response });
+      const json = await response.json();
+      console.log({ json });
+      return response.json();
     }
     return Promise.reject(response.status);
   } catch (error) {
@@ -23,11 +26,20 @@ async function postApi(endPoint: string, body: any) {
   }
 }
 
-export async function getUser(payload: GetUserDataPayload) {
+export async function getUser(payload: UserData) {
   try {
     const result = await postApi("auth/user", payload);
-    if (result) return result.value;
+    if (result) return result;
   } catch (error) {
     console.error("Error getting user data:", error);
+  }
+}
+
+export async function register(payload: RegisterPayload) {
+  try {
+    const result: RegisterResult = await postApi("auth/register", payload);
+    if (result) return result;
+  } catch (error) {
+    console.error("Error registering:", error);
   }
 }
