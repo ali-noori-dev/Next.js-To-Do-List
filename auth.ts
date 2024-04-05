@@ -11,6 +11,7 @@ export const { auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         const { email, id, name } = credentials as any as UserData;
         const user = await getUser({ email, id, name });
+        console.log({ user });
         if (!user) return null;
         return user;
       },

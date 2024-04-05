@@ -1,6 +1,6 @@
 "use client";
 
-import { authenticate } from "@/app/lib/actions";
+import { signUpAuthentication } from "@/app/lib/actions";
 import {
   AtSymbolIcon,
   ExclamationCircleIcon,
@@ -16,7 +16,10 @@ const iconStyles =
   "pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900";
 
 export default function LoginForm() {
-  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const [errorMessage, dispatch] = useFormState(
+    signUpAuthentication,
+    undefined
+  );
 
   return (
     <form action={dispatch} className="space-y-3">
@@ -34,6 +37,7 @@ export default function LoginForm() {
                 name="email"
                 placeholder="Enter your email address"
                 required
+                autoComplete="on"
               />
               <AtSymbolIcon className={iconStyles} />
             </div>
@@ -50,7 +54,8 @@ export default function LoginForm() {
                 name="password"
                 placeholder="Enter password"
                 required
-                minLength={6}
+                minLength={8}
+                autoComplete="on"
               />
               <KeyIcon className={iconStyles} />
             </div>

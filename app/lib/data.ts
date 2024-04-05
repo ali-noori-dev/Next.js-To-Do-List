@@ -1,45 +1,34 @@
 import { RegisterPayload, RegisterResult, UserData } from "./definitions";
 
-const baseURL = process.env.API_BASE_URL;
+interface ApiRequestOptions {
+  endPoint: string;
+  body: any;
+  method: "POST" | "GET";
+}
+
+const baseURL = process.env.NEXT_API_BASE_URL;
 
 const headers = {
   "Content-Type": "application/json",
+  Accept: "application/json",
 };
 
-async function postApi(endPoint: string, body: any) {
-  try {
-    const response = await fetch(`${baseURL}${endPoint}`, {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers,
-    });
+// TODO: error handler module can be injected and use on http request errors
+async function sendRequest({ endPoint, body, method }: ApiRequestOptions) {
+  //  Sends a POST request to the API endpoint with the provided body.
+  const response = await fetch(`${baseURL}${endPoint}`, {
+    method,
+    body: JSON.stringify(body),
+    headers,
+  });
 
-    if (response.ok) {
-      console.log({ response });
-      const json = await response.json();
-      console.log({ json });
-      return response.json();
-    }
-    return Promise.reject(response.status);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
+  return response.json();
 }
 
-export async function getUser(payload: UserData) {
-  try {
-    const result = await postApi("auth/user", payload);
-    if (result) return result;
-  } catch (error) {
-    console.error("Error getting user data:", error);
-  }
+export async function getUser(body: UserData) {
+  return sendRequest({ endPoint: "auth/user", body, method: "GET" });
 }
 
-export async function register(payload: RegisterPayload) {
-  try {
-    const result: RegisterResult = await postApi("auth/register", payload);
-    if (result) return result;
-  } catch (error) {
-    console.error("Error registering:", error);
-  }
+export async function register(body: RegisterPayload): Promise<RegisterResult> {
+  return sendRequest({ endPoint: "auth/register", body, method: "POST" });
 }

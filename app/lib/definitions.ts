@@ -24,3 +24,13 @@ export interface FormErrors {
 }
 
 export type RegisterResult = UserData | GeneralErrorModel;
+
+export interface AuthenticationResult {
+  status: "success" | "error";
+  errors?: FormErrors;
+}
+
+export interface IToastService {
+  success(msg: string, id?: string): void;
+  error(msg: string, id?: string): void;
+}

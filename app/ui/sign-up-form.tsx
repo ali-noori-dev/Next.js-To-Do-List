@@ -1,12 +1,16 @@
 "use client";
 
-import { authenticate } from "@/app/lib/actions";
+import { signUpAuthentication } from "@/app/lib/actions";
 import {
   AtSymbolIcon,
   IdentificationIcon,
   KeyIcon,
 } from "@heroicons/react/24/outline";
+import { redirect } from "next/navigation";
+import { useEffect } from "react";
 import { useFormState } from "react-dom";
+import { AuthenticationResult } from "../lib/definitions";
+import toastService from "../toast/toast.service";
 import RegisterButton from "./register-button";
 
 const labelStyles = "mb-3 mt-5 block text-xs font-medium text-gray-900";
@@ -19,11 +23,20 @@ const iconStyles =
   "pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900";
 
 export default function SignUpForm() {
-  const [formState, formAction] = useFormState(authenticate, undefined);
-  const nameError = formState?.name;
-  const emailError = formState?.email;
-  const passwordError = formState?.password;
-  const confirmPasswordError = formState?.password_confirmation;
+  const [formState, formAction] = useFormState(signUpAuthentication, undefined);
+  const state = formState as AuthenticationResult | undefined;
+  const errors = state?.errors;
+  const nameError = errors?.name;
+  const emailError = errors?.email;
+  const passwordError = errors?.password;
+  const confirmPasswordError = errors?.password_confirmation;
+
+  useEffect(() => {
+    if (state?.status === "success") {
+      toastService.success("Sign up successful! You can now log in.");
+      redirect("/login");
+    }
+  }, [state]);
 
   return (
     <form action={formAction} className="space-y-3">
@@ -31,7 +44,7 @@ export default function SignUpForm() {
         <div className="w-full">
           <div>
             <label className={labelStyles} htmlFor="name">
-              FUll Name
+              Full Name
             </label>
             <div className="relative">
               <input
@@ -40,6 +53,7 @@ export default function SignUpForm() {
                 name="name"
                 placeholder="Enter your full name"
                 required
+                autoComplete="on"
               />
               <IdentificationIcon className={iconStyles} />
             </div>
@@ -77,12 +91,18 @@ export default function SignUpForm() {
                 name="password"
                 placeholder="Enter password"
                 required
-                minLength={6}
+                minLength={8}
+                autoComplete="on"
               />
               <KeyIcon className={iconStyles} />
             </div>
             {passwordError && (
-              <span className={errorStyles}>{passwordError}</span>
+              <span
+                className={errorStyles}
+                dangerouslySetInnerHTML={{
+                  __html: passwordError.join("<br />"),
+                }}
+              />
             )}
           </div>
 
@@ -98,7 +118,8 @@ export default function SignUpForm() {
                 name="password_confirmation"
                 placeholder="Re-enter Password"
                 required
-                minLength={6}
+                minLength={8}
+                autoComplete="on"
               />
               <KeyIcon className={iconStyles} />
             </div>
