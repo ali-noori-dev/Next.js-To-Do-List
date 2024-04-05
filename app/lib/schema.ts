@@ -23,15 +23,18 @@ export const signUpSchema = z
         message: "Must contain at least one symbol",
         path: ["password"],
       }),
-    confirmPassword: z.string(),
+    password_confirmation: z.string(),
   })
-  .refine(({ confirmPassword, password }) => confirmPassword === password, {
-    message: "Passwords do not match",
-    params: {
-      field: "confirmPassword",
-    },
-    path: ["confirmPassword"],
-  });
+  .refine(
+    ({ password_confirmation, password }) => password_confirmation === password,
+    {
+      message: "Passwords do not match",
+      params: {
+        field: "password_confirmation",
+      },
+      path: ["password_confirmation"],
+    }
+  );
 
 export const loginSchema = z.object({
   email: z.string().email(),

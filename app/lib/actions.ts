@@ -11,13 +11,13 @@ export async function signUpAuthentication(
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
-  const confirmPassword = formData.get("password_confirmation") as string;
+  const password_confirmation = formData.get("password_confirmation") as string;
 
   const validatedFields = signUpSchema.safeParse({
     name,
     email,
     password,
-    confirmPassword,
+    password_confirmation,
   });
 
   if (!validatedFields.success)
@@ -26,14 +26,7 @@ export async function signUpAuthentication(
       errors: validatedFields.error.flatten().fieldErrors,
     };
   else {
-    const payload = {
-      name: validatedFields.data.name,
-      email: validatedFields.data.email,
-      password: validatedFields.data.password,
-      password_confirmation: validatedFields.data.confirmPassword,
-    };
-
-    const result = await createAccount(payload);
+    const result = await createAccount(validatedFields.data);
 
     if (isError(result))
       return {
@@ -72,7 +65,8 @@ export async function loginAuthentication(
       };
     else
       await signIn("credentials", {
-        ...result,
+        token: result.token,
+        name: "John Doe",
         redirectTo: "/",
       });
   }
