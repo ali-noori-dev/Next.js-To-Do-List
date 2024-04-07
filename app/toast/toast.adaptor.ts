@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { IToastService } from "../lib/definitions";
+import { IToastService } from "../types/definitions";
 
 class ToastAdaptor implements IToastService {
   success(msg: string, id?: string): void {

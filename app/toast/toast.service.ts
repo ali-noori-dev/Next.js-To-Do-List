@@ -1,4 +1,4 @@
-import { IToastService } from "../lib/definitions";
+import { IToastService } from "../types/definitions";
 import ToastAdaptor from "./toast.adaptor";
 
 class ToastService {

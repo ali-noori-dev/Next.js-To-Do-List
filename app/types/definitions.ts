@@ -45,3 +45,11 @@ export type AuthenticateUserResult = LoginSuccessResult | GeneralErrorModel;
 export interface LoginSuccessResult {
   token: string;
 }
+
+export interface Task {
+  id: string;
+  description: string;
+  completed: boolean;
+  created_at: string;
+  updated_at: string;
+}

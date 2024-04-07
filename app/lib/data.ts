@@ -1,10 +1,11 @@
+import { auth } from "@/auth";
 import {
   AuthenticateUserPayload,
   AuthenticateUserResult,
   CreateAccountPayload,
   CreateAccountResult,
-  User,
-} from "./definitions";
+  Task,
+} from "../types/definitions";
 
 interface PostRequestOptions {
   endPoint: string;
@@ -13,55 +14,52 @@ interface PostRequestOptions {
 
 interface GetRequestOptions {
   endPoint: string;
-  token?: string;
 }
 
 const baseURL = process.env.NEXT_API_BASE_URL;
 
-// TODO: error handler module can be injected and use on http request errors
-async function postRequest({ endPoint, body }: PostRequestOptions) {
-  const response = await fetch(`${baseURL}${endPoint}`, {
-    method: "POST",
-    body: JSON.stringify(body),
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-  });
-
-  return response.json();
-}
-
-async function getRequest({ endPoint, token }: GetRequestOptions) {
-  const headers: { [key: string]: string } = {
+const getHeaders = async () => {
+  const cookies = await auth();
+  const token = cookies?.user.accessToken;
+  return {
     "Content-Type": "application/json",
     Accept: "application/json",
+    Authorization: `Bearer ${token}`,
   };
+};
 
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
+// TODO: error handler module can be injected and use on http request errors
+async function getRequest({ endPoint }: GetRequestOptions) {
+  const headers = await getHeaders();
   const response = await fetch(`${baseURL}${endPoint}`, {
     method: "GET",
     headers,
   });
-
   return response.json();
 }
 
-export async function getUser(token: string): Promise<User> {
-  return getRequest({ endPoint: "auth/user", token });
+async function postRequest({ endPoint, body }: PostRequestOptions) {
+  const headers = await getHeaders();
+  const response = await fetch(`${baseURL}${endPoint}`, {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers,
+  });
+  return response.json();
 }
 
 export async function createAccount(
   body: CreateAccountPayload
 ): Promise<CreateAccountResult> {
-  return postRequest({ endPoint: "auth/register", body });
+  return postRequest({ endPoint: "/auth/register", body });
 }
 
 export async function authenticateUser(
   body: AuthenticateUserPayload
 ): Promise<AuthenticateUserResult> {
-  return postRequest({ endPoint: "auth/login", body });
+  return postRequest({ endPoint: "/auth/login", body });
+}
+
+export async function getTasks(): Promise<Task[]> {
+  return getRequest({ endPoint: "/tasks" });
 }

@@ -9,8 +9,8 @@ import {
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
-import { AuthenticationResult } from "../lib/definitions";
 import toastService from "../toast/toast.service";
+import { AuthenticationResult } from "../types/definitions";
 import RegisterButton from "./register-button";
 
 const labelStyles = "mb-3 mt-5 block text-xs font-medium text-gray-900";

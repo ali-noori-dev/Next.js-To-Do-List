@@ -11,18 +11,14 @@ export const authConfig = {
       if (isLoggedIn || isOnSignUp) return true;
       return false; // Redirect unauthenticated users to login page
     },
-    async signIn({ user, account, profile, email, credentials }) {
-      if (credentials) user.accessToken = credentials.token as string;
-      return true;
-    },
     async jwt({ token, account, profile, user }) {
       if (user?.accessToken) token.accessToken = user.accessToken;
-      if (user?.id) token.id = user.id;
+      if (user?.userId) token.userId = user.userId;
       return token;
     },
     async session({ session, token, user }) {
       session.user.accessToken = token.accessToken ?? "";
-      session.user.id = token.id as string;
+      session.user.userId = token.userId;
       return session;
     },
   },

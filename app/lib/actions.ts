@@ -75,7 +75,7 @@ export async function loginAuthentication(
       };
     else
       await signIn("credentials", {
-        token: result.token,
+        accessToken: result.token,
         redirectTo: "/", // Redirect to home page after successful login
       });
   }
