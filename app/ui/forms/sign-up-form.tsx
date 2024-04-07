@@ -9,9 +9,10 @@ import {
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
-import toastService from "../toast/toast.service";
-import { AuthenticationResult } from "../types/definitions";
-import RegisterButton from "./register-button";
+import toastService from "../../toast/toast.service";
+import { AuthenticationResult } from "../../types/definitions";
+import Input from "../input";
+import RegisterButton from "../register-button";
 
 const labelStyles = "mb-3 mt-5 block text-xs font-medium text-gray-900";
 const errorStyles = "text-red-500 text-xs mt-3";
@@ -43,59 +44,40 @@ export default function SignUpForm() {
       <div className="flex-1 rounded-lg bg-gray-50 px-6 py-4">
         <div className="w-full">
           <div>
-            <label className={labelStyles} htmlFor="name">
-              Full Name
-            </label>
-            <div className="relative">
-              <input
-                className={inputStyles}
-                id="name"
-                name="name"
-                placeholder="Enter your full name"
-                required
-                autoComplete="on"
-              />
-              <IdentificationIcon className={iconStyles} />
-            </div>
+            <Input
+              label="Full Name"
+              name="name"
+              placeholder="Enter your full name"
+              required
+              startIcon={<IdentificationIcon className={iconStyles} />}
+            />
             {nameError && <span className={errorStyles}>{nameError}</span>}
           </div>
 
           <div>
-            <label className={labelStyles} htmlFor="email">
-              Email
-            </label>
-            <div className="relative">
-              <input
-                className={inputStyles}
-                id="email"
-                type="email"
-                name="email"
-                placeholder="Enter your email address"
-                autoComplete="on"
-                required
-              />
-              <AtSymbolIcon className={iconStyles} />
-            </div>
+            <Input
+              label="Email"
+              name="email"
+              type="email"
+              placeholder="Enter your email address"
+              required
+              startIcon={<AtSymbolIcon className={iconStyles} />}
+            />
+
             {emailError && <span className={errorStyles}>{emailError}</span>}
           </div>
 
           <div className="mt-4">
-            <label className={labelStyles} htmlFor="password">
-              Password
-            </label>
-            <div className="relative">
-              <input
-                className={inputStyles}
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter password"
-                required
-                minLength={8}
-                autoComplete="on"
-              />
-              <KeyIcon className={iconStyles} />
-            </div>
+            <Input
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="Enter password"
+              required
+              minLength={8}
+              startIcon={<KeyIcon className={iconStyles} />}
+            />
+
             {passwordError && (
               <span
                 className={errorStyles}
@@ -107,22 +89,16 @@ export default function SignUpForm() {
           </div>
 
           <div className="mt-4">
-            <label className={labelStyles} htmlFor="password_confirmation">
-              Confirm Password
-            </label>
-            <div className="relative">
-              <input
-                className={inputStyles}
-                id="password_confirmation"
-                type="password"
-                name="password_confirmation"
-                placeholder="Re-enter Password"
-                required
-                minLength={8}
-                autoComplete="on"
-              />
-              <KeyIcon className={iconStyles} />
-            </div>
+            <Input
+              label="Confirm Password"
+              name="password_confirmation"
+              type="password"
+              placeholder="Re-enter Password"
+              required
+              minLength={8}
+              startIcon={<KeyIcon className={iconStyles} />}
+            />
+
             {confirmPasswordError && (
               <span className={errorStyles}>{confirmPasswordError}</span>
             )}

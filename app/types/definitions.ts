@@ -53,3 +53,7 @@ export interface Task {
   created_at: string;
   updated_at: string;
 }
+
+export interface AddTaskPayload {
+  description: string;
+}

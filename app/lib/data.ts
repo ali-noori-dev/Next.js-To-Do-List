@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import {
+  AddTaskPayload,
   AuthenticateUserPayload,
   AuthenticateUserResult,
   CreateAccountPayload,
@@ -62,4 +63,8 @@ export async function authenticateUser(
 
 export async function getTasks(): Promise<Task[]> {
   return getRequest({ endPoint: "/tasks" });
+}
+
+export async function addTask(body: AddTaskPayload): Promise<Task> {
+  return postRequest({ endPoint: "/tasks", body });
 }

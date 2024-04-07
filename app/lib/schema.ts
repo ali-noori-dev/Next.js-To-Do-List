@@ -35,8 +35,3 @@ export const signUpSchema = z
       path: ["password_confirmation"],
     }
   );
-
-export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-});

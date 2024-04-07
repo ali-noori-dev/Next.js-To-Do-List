@@ -1,7 +1,7 @@
 "use server";
 import { signIn } from "@/auth";
-import { authenticateUser, createAccount } from "./data";
-import { loginSchema, signUpSchema } from "./schema";
+import { addTask, authenticateUser, createAccount } from "./data";
+import { signUpSchema } from "./schema";
 import { isError } from "./utils";
 
 export async function signUpAuthentication(
@@ -48,35 +48,27 @@ export async function loginAuthentication(
   // Extract user login information from form data
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  const result = await authenticateUser({ email, password });
 
-  // Validate user login data using schema
-  const validatedFields = loginSchema.safeParse({ email, password });
+  // If there is an error during authentication, return error status
+  if (isError(result)) return { status: "error" };
+  else
+    await signIn("credentials", {
+      accessToken: result.token,
+      redirectTo: "/", // Redirect to home page after successful login
+    });
+}
 
-  // If validation fails, return error status and validation errors
-  if (!validatedFields.success)
-    return {
-      status: "error",
-      errors: validatedFields.error.flatten().fieldErrors,
-    };
-  else {
-    // Authenticate user using validated login data
-    const payload = {
-      email: validatedFields.data.email,
-      password: validatedFields.data.password,
-    };
+export async function handleAddTask(
+  prevState: string | undefined,
+  formData: FormData
+): Promise<any> {
+  // Extract user login information from form data
+  const description = formData.get("description") as string;
+  const result = await addTask({ description });
+  console.log({ result });
 
-    const result = await authenticateUser(payload);
-
-    // If there is an error during authentication, return error status and errors
-    if (isError(result))
-      return {
-        status: "error",
-        errors: result.errors,
-      };
-    else
-      await signIn("credentials", {
-        accessToken: result.token,
-        redirectTo: "/", // Redirect to home page after successful login
-      });
-  }
+  // If there is an error while adding the task, return error status
+  if (isError(result)) return { status: "error" };
+  else return { status: "success" };
 }
