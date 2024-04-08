@@ -66,7 +66,6 @@ export async function handleAddTask(
   // Extract user login information from form data
   const description = formData.get("description") as string;
   const result = await addTask({ description });
-  console.log({ result });
 
   // If there is an error while adding the task, return error status
   if (isError(result)) return { status: "error" };
