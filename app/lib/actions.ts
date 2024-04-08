@@ -1,6 +1,13 @@
 "use server";
 import { signIn } from "@/auth";
-import { addTask, authenticateUser, createAccount } from "./data";
+import { TaskCompletionState } from "../ui/forms/task-completion-form";
+import {
+  addTask,
+  authenticateUser,
+  createAccount,
+  deleteTask,
+  editTask,
+} from "./data";
 import { signUpSchema } from "./schema";
 import { isError } from "./utils";
 
@@ -45,12 +52,10 @@ export async function loginAuthentication(
   prevState: string | undefined,
   formData: FormData
 ): Promise<any> {
-  // Extract user login information from form data
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const result = await authenticateUser({ email, password });
 
-  // If there is an error during authentication, return error status
   if (isError(result)) return { status: "error" };
   else
     await signIn("credentials", {
@@ -63,11 +68,24 @@ export async function handleAddTask(
   prevState: string | undefined,
   formData: FormData
 ): Promise<any> {
-  // Extract user login information from form data
   const description = formData.get("description") as string;
   const result = await addTask({ description });
-
-  // If there is an error while adding the task, return error status
   if (isError(result)) return { status: "error" };
   else return { status: "success" };
+}
+
+export async function handleDeleteTask(prevState: string): Promise<any> {
+  const result = await deleteTask(prevState);
+  console.log({ result });
+}
+
+export async function handleUpdateTask(
+  prevState: TaskCompletionState,
+  formData: FormData
+): Promise<any> {
+  const completed = formData.get("completed") as string;
+  const payload = { id: prevState.id, completed: !!completed };
+  const result = await editTask(payload);
+  if (isError(result)) return { status: "error", id: prevState.id };
+  else return { status: "success", id: prevState.id };
 }

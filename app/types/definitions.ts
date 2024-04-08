@@ -57,3 +57,8 @@ export interface Task {
 export interface AddTaskPayload {
   description: string;
 }
+
+export interface EditTaskPayload {
+  completed: boolean;
+  id: string;
+}

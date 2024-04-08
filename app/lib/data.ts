@@ -5,6 +5,7 @@ import {
   AuthenticateUserResult,
   CreateAccountPayload,
   CreateAccountResult,
+  EditTaskPayload,
   Task,
 } from "../types/definitions";
 
@@ -67,4 +68,23 @@ export async function getTasks(): Promise<Task[]> {
 
 export async function addTask(body: AddTaskPayload): Promise<Task> {
   return postRequest({ endPoint: "/tasks", body });
+}
+
+export async function deleteTask(id: string) {
+  const headers = await getHeaders();
+  const response = await fetch(`${baseURL}/tasks/${id}`, {
+    method: "DELETE",
+    headers,
+  });
+  return response.json();
+}
+
+export async function editTask(body: EditTaskPayload) {
+  const headers = await getHeaders();
+  const response = await fetch(`${baseURL}/tasks/${body.id}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+    headers,
+  });
+  return response.json();
 }
