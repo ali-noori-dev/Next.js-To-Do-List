@@ -21,7 +21,6 @@ export const authConfig = {
     // This callback is executed when a JWT token is decoded.
     async jwt({ token, account, profile, user }) {
       const accessToken = token?.accessToken;
-      console.log({ accessToken, user });
       // User data is available only after login
       if (user) {
         token.userId = user.userId;
@@ -30,13 +29,11 @@ export const authConfig = {
         // If user data is not available but the access token exists
         const expiresAt = accessToken.expiresAt;
         const currentTime = Math.floor(Date.now() / 1000); // Get the current timestamp
-        console.log({ expiresAt, currentTime });
         if (expiresAt > currentTime) {
           // If the access token has not expired, return the token as is
           return token;
         } else {
           // If the access token has expired, refresh it
-          console.log("refreshing token");
           const response = await fetch(
             `${process.env.NEXT_API_BASE_URL}/auth/refresh`,
             {
@@ -49,13 +46,11 @@ export const authConfig = {
             }
           );
           const data: Token = await response.json();
-          console.log({ data });
           // Update the token with the refreshed access token and expiration time
           token.accessToken = {
             value: data.token,
             expiresAt: Math.floor(Date.now() / 1000 + 3600),
           };
-          console.log({ token });
         }
       }
       return token; // Return the updated token
