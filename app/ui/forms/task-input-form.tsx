@@ -36,7 +36,7 @@ export default function TaskInputForm({ userData }: { userData: User }) {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `Bearer ${userData.accessToken}`,
+          Authorization: `Bearer ${userData.accessToken?.value}`,
         },
       },
     });

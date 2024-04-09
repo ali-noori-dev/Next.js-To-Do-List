@@ -22,7 +22,7 @@ const baseURL = process.env.NEXT_API_BASE_URL;
 
 const getHeaders = async () => {
   const cookies = await auth();
-  const token = cookies?.user.accessToken;
+  const token = cookies?.user.accessToken?.value;
   return {
     "Content-Type": "application/json",
     Accept: "application/json",

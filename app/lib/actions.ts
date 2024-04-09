@@ -52,16 +52,22 @@ export async function loginAuthentication(
   prevState: string | undefined,
   formData: FormData
 ): Promise<any> {
+  // Extract email and password from form data
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+
+  // Authenticate the user using provided credentials
   const result = await authenticateUser({ email, password });
 
+  // If authentication fails, return an error status
   if (isError(result)) return { status: "error" };
-  else
+  else {
+    // Sign in the user using credentials method and storing the access token
     await signIn("credentials", {
       accessToken: result.token,
       redirectTo: "/", // Redirect to home page after successful login
     });
+  }
 }
 
 export async function handleAddTask(

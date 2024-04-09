@@ -40,9 +40,9 @@ export interface IToastService {
   error(msg: string, id?: string): void;
 }
 
-export type AuthenticateUserResult = LoginSuccessResult | GeneralErrorModel;
+export type AuthenticateUserResult = Token | GeneralErrorModel;
 
-export interface LoginSuccessResult {
+export interface Token {
   token: string;
 }
 

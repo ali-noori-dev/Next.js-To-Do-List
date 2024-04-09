@@ -18,8 +18,6 @@ export default function TaskCompletionForm({ task }: { task: Task }) {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
-  console.log(task.id, formState.id);
-
   useEffect(() => {
     if (formState.status === "success") {
       toastService.success("Task updated successfully");

@@ -8,18 +8,19 @@ export default async function Home() {
   const session = await auth();
   const userData = session?.user;
   const tasks = await getTasks();
+
+  const taskList = (
+    <ul>
+      {tasks.map((task) => (
+        <TaskItem key={task.id} task={task} />
+      ))}
+    </ul>
+  );
+
   return (
     <main className="shadow-[0_3px_10px_rgb(0,0,0,0.2)] w-[70%]  m-[40px_auto] pt-2">
       {userData && <TaskInputForm userData={userData} />}
-      {tasks.length ? (
-        <ul>
-          {tasks.map((task) => (
-            <TaskItem key={task.id} task={task} />
-          ))}
-        </ul>
-      ) : (
-        <EmptyTodoMessage />
-      )}
+      {tasks.length ? taskList : <EmptyTodoMessage />}
     </main>
   );
 }
